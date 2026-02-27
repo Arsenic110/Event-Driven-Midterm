@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.madeinorbit.client.model;
 
 import java.io.FileReader;
@@ -18,6 +14,7 @@ public class Config {
 
     private static final Gson gson = new Gson();
     
+    //will load host and port fields from the JSON file
     public static Config loadFromJson(String path) throws IOException {
         try (FileReader reader = new FileReader(path)) {
             return gson.fromJson(reader, Config.class);
