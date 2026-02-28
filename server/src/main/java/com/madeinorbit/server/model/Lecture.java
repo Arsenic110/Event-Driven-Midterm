@@ -1,3 +1,5 @@
+package model;
+
 import java.util.ArrayList;
 
 class Lecture {
@@ -7,7 +9,7 @@ class Lecture {
     String room;
     String moduleName;
 
-    public Lecure(Strint[] info) {
+    public Lecture(String[] info) {
         this.day = info[1];
         this.start = Integer.parseInt(info[2]);
         this.end = Integer.parseInt(info[3]);
@@ -16,7 +18,7 @@ class Lecture {
     }
 
     @Override
-    String toString(){
+    public String toString(){
         return day + "|" + start + "|" + end + "|" + room + "|" + moduleName;
     }
 

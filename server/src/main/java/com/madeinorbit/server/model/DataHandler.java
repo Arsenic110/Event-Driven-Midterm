@@ -1,10 +1,12 @@
-import java.util.Arraylist;
+package model;
+
+import java.util.ArrayList;
 
 class DataHandler{
     ArrayList<Lecture> lectures = new ArrayList<>();
 
-    private handleRequest(String requestRaw) throws IncorrectActionException{
-        String request = requestRaw.split("|"); // or in any other way
+    private void handleRequest(String requestRaw) throws IncorrectActionException{
+        String request[] = requestRaw.split("|"); // or in any other way
 
         switch(request[0]){
             case "ADD":
@@ -25,7 +27,6 @@ class DataHandler{
                 break;
             default:
                 throw new IncorrectActionException("Go and Fuck Yourself");
-                break;
         }
     }
 }
