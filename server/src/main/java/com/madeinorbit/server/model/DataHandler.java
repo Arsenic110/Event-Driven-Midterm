@@ -1,20 +1,24 @@
 import java.util.Arraylist;
 
 class DataHandler{
-    ArrayList<String> lectures = new ArrayList<>();
+    ArrayList<Lecture> lectures = new ArrayList<>();
 
     private handleRequest(String requestRaw) throws IncorrectActionException{
         String request = requestRaw.split("|"); // or in any other way
 
         switch(request[0]){
             case "ADD":
-                //some shit
+                //check for clashes
+
+                lectures.add(new Lecture(request));
                 break;
             case "REMOVE":
-                //some remove shit
+                //try finding
                 break;
             case "DISPLAY":
-                //some fancy shit
+                for(Lecture l: lectures){
+                    //send them l.toString();
+                }
                 break;
             case "OTHER":
                 //no clue what shit
