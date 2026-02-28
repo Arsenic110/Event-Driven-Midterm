@@ -1,6 +1,4 @@
-package model;
-
-import java.util.ArrayList;
+package com.madeinorbit.server.model;
 
 class Lecture {
     String day;

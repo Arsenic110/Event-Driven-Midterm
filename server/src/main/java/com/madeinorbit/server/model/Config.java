@@ -1,8 +1,9 @@
 package com.madeinorbit.server.model;
 
+import com.google.gson.Gson;
+
 import java.io.FileReader;
 import java.io.IOException;
-import com.google.gson.Gson;
 
 /**
  *

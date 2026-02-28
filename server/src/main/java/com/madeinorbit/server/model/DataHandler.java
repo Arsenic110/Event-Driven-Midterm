@@ -1,4 +1,4 @@
-package model;
+package com.madeinorbit.server.model;
 
 import java.util.ArrayList;
 
@@ -11,6 +11,7 @@ class DataHandler{
         switch(request[0]){
             case "ADD":
                 //check for clashes
+
 
                 lectures.add(new Lecture(request));
                 break;

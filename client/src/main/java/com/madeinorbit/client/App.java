@@ -1,5 +1,3 @@
-package com.madeinorbit.client;
-
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
@@ -15,7 +13,7 @@ public class App {
 
     //@Override
     public void start(Stage stage) {
-        var javaVersion = SystemInfo.javaVersion();
+        var javaVersion = com.madeinorbit.client.SystemInfo.javaVersion();
         var javafxVersion = SystemInfo.javafxVersion();
 
         var label = new Label("Hello, JavaFX " + javafxVersion + ", running on Java " + javaVersion + ".");
