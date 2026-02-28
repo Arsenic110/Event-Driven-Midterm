@@ -7,6 +7,8 @@ import com.google.gson.Gson;
 /**
  *
  * @author Kuba Rodak
+ * @author Mykhailop Fedenko
+ *
  */
 public class Config {
     public String host = "127.0.0.1";
