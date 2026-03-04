@@ -27,3 +27,4 @@ replay_pid*
 
 #INTELIJ STUFF
 .idea/*
+/server/target/

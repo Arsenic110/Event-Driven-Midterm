@@ -1,95 +1,227 @@
 package com.madeinorbit.client.view;
 
 import com.madeinorbit.client.controller.ClientController;
+import com.madeinorbit.client.model.Action;
+import com.madeinorbit.client.model.Row;
+
 import javafx.application.Application;
-import javafx.geometry.Insets;
-import javafx.scene.Scene;
+import javafx.geometry.*;
+import javafx.scene.*;
 import javafx.scene.control.*;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
+import javafx.util.Callback;
+import javafx.collections.FXCollections;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.stage.Stage;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  *
  * @author Kuba Rodak
  */
 public class MainView extends Application {
+    
     private ClientController controller;
-    private TextArea outputArea = new TextArea();
-    private Button connectBtn = new Button("Connect!");
-    private Button stopBtn = new Button ("Disconnect!");
+    
+    private ComboBox<Action> actionBox;
+    private DatePicker datePicker;
+    private ComboBox<String> timeBox;
+    private TextField roomField, moduleField;
+    private Button sendButton, stopButton, connectButton;
+    private Label statusLabel;
+    private TextArea logArea;
+    private TableView<Row> table;
     
     public static void main(String[] args) {
         launch();
     }
 
     @Override
-    public void start(Stage primaryStage) {
+    public void start(Stage stage) {
         try {
-            controller = new ClientController();
-            controller.setView(this);
-        } catch (Exception e) {
+            controller = new ClientController(this);
+        } catch (IOException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR, e.getMessage());
             alert.showAndWait();
             System.exit(1);
         }
 
-        outputArea.setPrefSize(600, 300);
-        outputArea.setEditable(false);
+        BorderPane root = new BorderPane();
+        
+        //make title
+        root.setTop(makeTitle());
+        //make form
+        root.setLeft(makeForm());
+        //make display table
+        root.setRight(makeDisplayTable());
+        //make log
+        root.setBottom(makeLogArea());
+        
+        Scene scene = new Scene (root, 1280, 840);
+        stage.setTitle("Lecture Scheduler - Client");
+        stage.setScene(scene);
+        
+        stage.show();
+        
+        //refreshTable();
+    }
+    
+    private Node makeTitle() {
+        Label title = new Label("Lecture Scheduler - Client");
+        
+        title.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
+        HBox box = new HBox(title);
+        box.setPadding(new Insets(12));
+        box.setAlignment(Pos.CENTER_LEFT);
+        
+        return box;
+    }
+    
+    private Node makeForm() {
+        actionBox = new ComboBox<>(FXCollections.observableArrayList(Action.values()));
+        actionBox.getSelectionModel().select(Action.ADD);
 
-        connectBtn.setOnAction(e -> controller.connectAndHello());
-        stopBtn.setOnAction(e -> controller.closeConnection());
-        stopBtn.setDisable(true);
+        datePicker = new DatePicker();
 
-        VBox root = new VBox(10, connectBtn, stopBtn, outputArea);
-        root.setPadding(new Insets(20));
-        Scene scene = new Scene(root, 640, 480);
+        timeBox = new ComboBox<>(FXCollections.observableArrayList(
+                "09:00-10:00", "10:00-11:00", "11:00-12:00", "12:00-13:00",
+                "14:00-15:00", "15:00-16:00", "16:00-17:00", "17:00-18:00"
+        ));
+        timeBox.getSelectionModel().selectFirst();
 
-        primaryStage.setScene(scene);
-        primaryStage.setTitle("Timetable Client");
-        primaryStage.setOnCloseRequest(e -> {
-            try {
-                controller.closeConnection();
-                System.exit(0);
-            } catch (Exception f) {
-                System.exit(1);
-            }
-        });
+        roomField = new TextField();
+        roomField.setPromptText("Room (e.g. AG01, B102)");
 
-        primaryStage.show();
-        outputArea.appendText("Client ready. Press connect!\n");
+        moduleField = new TextField();
+        moduleField.setPromptText("Module (e.g. CS4096)");
+
+        connectButton = new Button("Connect");
+        sendButton = new Button("Send");
+        sendButton.setDisable(true);
+        stopButton = new Button("Stop");
+        sendButton.setDisable(true);
+        statusLabel = new Label("Ready");
+
+        connectButton.setOnAction(e -> controller.connectAndHello());
+        sendButton.setOnAction(e -> controller.onSend());
+        stopButton.setOnAction(e -> controller.onStop());
+
+        actionBox.valueProperty().addListener((obs, o, n) -> updateFormForAction(n));
+
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(12));
+
+        int r = 0;
+        grid.addRow(r++, new Label("Action:"), actionBox);
+        grid.addRow(r++, new Label("Date:"), datePicker);
+        grid.addRow(r++, new Label("Time:"), timeBox);
+        grid.addRow(r++, new Label("Room:"), roomField);
+        grid.addRow(r++, new Label("Module:"), moduleField);
+
+        VBox box = new VBox(10, grid, connectButton, sendButton, stopButton, statusLabel);
+        box.setPadding(new Insets(12));
+        box.setPrefWidth(320);
+        
+        return box;
     }
 
+    private Node makeDisplayTable() {
+        table = new TableView<>();
+
+        TableColumn<Row, String> d = column("Date", r -> r.date);
+        TableColumn<Row, String> t = column("Time", r -> r.time);
+        TableColumn<Row, String> r = column("Room", row -> row.room);
+        TableColumn<Row, String> m = column("Module", row -> row.module);
+
+        table.getColumns().addAll(d, t, r, m);
+        table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+
+        VBox box = new VBox(8, new Label("Schedule"), table);
+        box.setPadding(new Insets(12));
+        
+        return box;
+    }
+    
+    private Node makeLogArea() {
+        logArea = new TextArea();
+        
+        logArea.setEditable(false);
+        logArea.setPrefRowCount(6);
+        VBox box = new VBox(6, new Label("Command Log"), logArea);
+        box.setPadding(new Insets(10));
+        
+        return box;
+    }
+    
     public void onReady() {
-        sayServer("Connected and ready.");
-        connectBtn.setDisable(true);
-        stopBtn.setDisable(false); //enable stop button
+        say("Server", "Connection successful.");
+        connectButton.setDisable(true);
+        sendButton.setDisable(false);
+        stopButton.setDisable(false); //enable send & stop buttons
     }
 
     public void onError(String msg) {
-        sayError(msg);
+        say("Error", msg);
     }
 
     public void onDisconnected() {
-        sayServer("Disconnecting.");
-        connectBtn.setDisable(false); //enable connect button
-        stopBtn.setDisable(true); //disable stop button
+        say("Server", "Connection Terminated.");
+        connectButton.setDisable(false); //enable connect button
+        sendButton.setDisable(true);
+        stopButton.setDisable(true); //disable send & stop buttons
     }
 
-    private String sayServer(String msg) {
-        String s = "[SERVER] > " + msg + "\n";
-        outputArea.appendText(s);
+    public String say(String tag, String msg) {
+        String s = "[" + tag + "] > " + msg + "\n";
+        logArea.appendText(s);
         return s;
     }
 
-    private String sayClient(String msg) {
-        String s = "[CLIENT] > " + msg + "\n";
-        outputArea.appendText(s);
-        return s;
+    public void refreshLectures(List<String> lectures) {
+        List<Row> rows = new ArrayList<>();
+        for (String l : lectures) {
+            //rows.add(new Row(l.date.toString(), l.time, l.room, l.module));
+            rows.add(new Row(l, l, l, l));
+        }
+        table.setItems(FXCollections.observableArrayList(rows));
     }
 
-    private String sayError(String msg) {
-        String s = "[ERROR] > " + msg + "\n";
-        outputArea.appendText(s);
-        return s;
+    private void updateFormForAction(Action a) {
+        boolean add = a == Action.ADD;
+        boolean remove = a == Action.REMOVE;
+
+        datePicker.setDisable(!(add || remove));
+        timeBox.setDisable(!(add || remove));
+        roomField.setDisable(!add);
+        moduleField.setDisable(!add);
     }
+    
+    private <T> TableColumn<Row, T> column(String name, Callback<Row, javafx.beans.value.ObservableValue<T>> f) {
+        TableColumn<Row, T> c = new TableColumn<>(name);
+        c.setCellValueFactory(d -> f.call(d.getValue()));
+        return c;
+    }
+
+    //java my beloved
+    public ComboBox<Action> getActionBox() { return this.actionBox; }
+    public DatePicker getDatePicker() { return this.datePicker; }
+    public ComboBox<String> getTimeBox() { return this.timeBox; }
+    public TextField getRoomField() { return this.roomField; }
+    public TextField getModuleField() { return this.moduleField; }
+    public Button getSendButton() { return this.sendButton; }
+    public Button getStopButton() { return this.stopButton; }
+    public Label getStatusLabel() { return this.statusLabel; }
+    public TextArea getLogArea() { return this.logArea; }
+    public TableView<Row> getTable() { return this.table; }
+
 }

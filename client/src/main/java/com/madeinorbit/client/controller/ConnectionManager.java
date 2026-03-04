@@ -1,5 +1,6 @@
 package com.madeinorbit.client.controller;
 
+import com.madeinorbit.client.model.Request;
 import java.io.*;
 import java.net.*;
 
@@ -38,9 +39,14 @@ public class ConnectionManager implements AutoCloseable {
     }
 
     @Override
-    public void close() throws IOException {
-        if (socket != null && !socket.isClosed())
-            socket.close();
+    public void close() {
+        if (socket != null && !socket.isClosed()) {
+            try {
+                socket.close();
+            } catch (IOException e) {
+                //unknown state
+            }
+        }
         connected = false;
     }
 }
