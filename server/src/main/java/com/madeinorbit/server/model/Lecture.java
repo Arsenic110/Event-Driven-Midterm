@@ -1,6 +1,6 @@
 package com.madeinorbit.server.model;
 
-class Lecture {
+class Lecture implements Comparable<Lecture> {
     String day;
     int start;
     int end;
@@ -18,6 +18,22 @@ class Lecture {
     @Override
     public String toString(){
         return day + "|" + start + "|" + end + "|" + room + "|" + moduleName;
+    }
+
+    @Override // for clash check -1 means no overlap, 0 exact match, 1 overlap
+    public int compareTo(Lecture other){
+        if(other.day.equals(this.day)){
+            if(other.end <= this.start || this.end <= other.start){
+                return -1;
+            }
+            else if(other.start == this.start && other.end == this.end){
+                return 0;
+            }
+            else{
+                return 1;
+            }
+        }
+        return -1;
     }
 
     public void setDay(String day) {this.day = day;}
