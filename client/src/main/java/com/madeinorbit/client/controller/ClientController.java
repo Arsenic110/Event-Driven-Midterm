@@ -59,7 +59,7 @@ public class ClientController {
     }
 
     //once send button is clicked   
-    public void onSend(Action a, LocalDate d, String t, String r, String m) {
+    public void onSend(Action a, String d, String t, String r, String m) {
 
         Request req = Request.fromUI(a, d, t, r, m);
 
@@ -89,23 +89,23 @@ public class ClientController {
         }
 
         if (res.startsWith("INCORRECT")) {
-            //view.onError("Incorrect Action Exception");
+            view.onError("Incorrect Action Exception");
             return;
         }
 
         if (res.startsWith("OK")) {
-            //refreshData(res);
+            refreshData(res);
         }
     }
 
     public void onStop() {
-        this.onSend(Action.STOP, LocalDate.now(), "", "", "");
+        this.onSend(Action.STOP, "", "", "", "");
     }
 
     private void refreshData(String res) {
         List<Lecture> list = new ArrayList<>();
         
-        view.onError(res);
+        view.say("Debug", res);
 
         //res.split("")
 

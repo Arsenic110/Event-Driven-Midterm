@@ -34,7 +34,7 @@ public class MainView extends Application {
     private ClientController controller;
     
     private ComboBox<Action> actionBox;
-    private DatePicker datePicker;
+    private ComboBox<String> datePicker;
     private ComboBox<String> timeBox;
     private TextField roomField, moduleField;
     private Button sendButton, stopButton, connectButton;
@@ -89,7 +89,9 @@ public class MainView extends Application {
         actionBox = new ComboBox<>(FXCollections.observableArrayList(Action.values()));
         actionBox.getSelectionModel().select(Action.ADD);
 
-        datePicker = new DatePicker();
+        datePicker = new ComboBox<>(FXCollections.observableArrayList(
+                "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"
+        ));
 
         timeBox = new ComboBox<>(FXCollections.observableArrayList(
                 "09:00-10:00", "10:00-11:00", "11:00-12:00", "12:00-13:00",
@@ -114,7 +116,7 @@ public class MainView extends Application {
         sendButton.setOnAction(e -> {
 
             Action a = this.actionBox.getValue();
-            LocalDate d = this.datePicker.getValue();
+            String d = this.datePicker.getValue();
             String t = this.timeBox.getValue();
             String r = this.roomField.getText();
             String m = this.moduleField.getText();
@@ -200,7 +202,7 @@ public class MainView extends Application {
         List<Row> rows = new ArrayList<>();
         for (Lecture l : lectures) {
             l.toString();
-            rows.add(new Row(l.getDate().toString(), l.getTime(), l.getRoom(), l.getModule()));
+            rows.add(new Row(l.getDay(), l.getTime(), l.getRoom(), l.getModule()));
         }
         table.setItems(FXCollections.observableArrayList(rows));
     }
