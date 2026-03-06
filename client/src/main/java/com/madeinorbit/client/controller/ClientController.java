@@ -56,14 +56,8 @@ public class ClientController {
     }
 
     //once send button is clicked   
-    public void onSend() {
-        Request req = Request.fromUI(
-            view.getActionBox().getValue(),
-            view.getDatePicker().getValue(),
-            view.getTimeBox().getValue(),
-            view.getRoomField().getText(),
-            view.getModuleField().getText()
-        );
+    public void onSend(Action a, LocalDate d, String t, String r, String m) {
+        Request req = Request.fromUI(a, d, t, r m);
 
         if (!req.isValid()) {
             view.onError("Request is invalid!");
@@ -84,23 +78,31 @@ public class ClientController {
 
         if (res.startsWith("TERMINATE")) {
             closeConnection();
+            return;
+        }
+
+        if (res.startsWith("INCORRECT")) {
+            //view.onError("Incorrect Action Exception");
+            return;
         }
 
         if (res.startsWith("OK")) {
-            refreshData();
+            //refreshData(res);
         }
     }
 
     public void onStop() {
-
+        this.onSend(Action.STOP, new LocalDate(), "", "", "");
     }
 
-    private void refreshData() {
-        //something like:
+    private void refreshData(String res) {
+
+        List<Lecture> list = new List<>();
+
+        res.split("")
 
         /*
-
-        List list = server.getLecturesSorted();
+        List<Lecture> list = server.getLecturesSorted();
 
         view.refreshLectures(list);
 
