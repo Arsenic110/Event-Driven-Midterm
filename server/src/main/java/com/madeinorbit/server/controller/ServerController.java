@@ -15,6 +15,7 @@ public class ServerController{
     public ServerController(){
         config = new Config();
         connectionHandler = new ConnectionHandler();
+        dataHandler = new DataHandler();
         view = new ConsoleView();
     }
 
@@ -39,7 +40,9 @@ public class ServerController{
                 request = connectionHandler.receive();
 
                 view.say("Received: " + request);
-                response = dataHandler.handleRequest(request);
+                if(request != null){
+                    response = dataHandler.handleRequest(request);
+                }
                 view.say("Handled successfully");
             } catch (IOException e) {
                 view.say("Server not open " + e.getMessage());
