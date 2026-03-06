@@ -6,8 +6,13 @@ public class DataHandler{
     ArrayList<Lecture> lectures = new ArrayList<>();
 
     public String handleRequest(String requestRaw) throws IncorrectActionException{
+        if(requestRaw.equals("HELLO")){
+            return "READY";
+        }
+
         String request[] = requestRaw.split("|"); // or in any other way
         String output = "OK;";
+
 
         switch(request[0]) {
             case "ADD":
@@ -42,8 +47,6 @@ public class DataHandler{
             case "OTHER":
                 // placeholder for future stuff
                 return "OK;";
-            case "HELLO":
-                return "READY";
             case "STOP":
                 return "TERMINATE";
             default:
