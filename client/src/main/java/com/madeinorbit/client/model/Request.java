@@ -37,7 +37,7 @@ public class Request {
         if (action == Action.ADD)
             return "ADD|" + date + "|" + time + "|" + room + "|" + module;
         else if (action == Action.REMOVE)
-            return "REMOVE|" + date + "|" + time + "||";
+            return "REMOVE|" + date + "|" + time + "|" + room + "|" + module;
         else if (action == Action.DISPLAY)
             return "DISPLAY||||";
         else
