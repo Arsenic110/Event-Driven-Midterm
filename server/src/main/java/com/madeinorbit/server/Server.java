@@ -9,6 +9,7 @@ import com.madeinorbit.server.controller.ServerController;
 /**
  *
  * @author Kuba Rodak
+ * @author Mykhailo Fedenko
  */
 public class Server {
     static ServerController serverController;

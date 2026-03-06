@@ -1,9 +1,6 @@
 package com.madeinorbit.server.controller;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.*;
 
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -11,8 +8,8 @@ import java.net.Socket;
 class ConnectionHandler{
     ServerSocket serverSocket;
     Socket clientSocket;
-    PrintWriter out;
-    BufferedReader in;
+    DataOutputStream out;
+    DataInputStream in;
     boolean isOpen = false;
 
 
@@ -28,8 +25,8 @@ class ConnectionHandler{
 
         String inputRequest;
         clientSocket = serverSocket.accept();
-        in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-        inputRequest = in.readLine();
+        in = new DataInputStream(clientSocket.getInputStream());
+        inputRequest = in.readUTF();
 
         return inputRequest;
     }
@@ -39,8 +36,8 @@ class ConnectionHandler{
             throw new IllegalStateException("Fuck off");
         }
 
-        PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
-        out.println(response);
+        out = new DataOutputStream(clientSocket.getOutputStream());
+        out.writeUTF(response);
     }
 
     public void shutdown(){
