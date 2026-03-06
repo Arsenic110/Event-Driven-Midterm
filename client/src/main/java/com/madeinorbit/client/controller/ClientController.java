@@ -60,14 +60,18 @@ public class ClientController {
 
     //once send button is clicked   
     public void onSend(Action a, LocalDate d, String t, String r, String m) {
+
         Request req = Request.fromUI(a, d, t, r, m);
 
         if (!req.isValid()) {
             view.onError("Request is invalid!");
+            return;
         }
 
+        System.out.println("" + req.isValid());
+
         view.say("Client", req.toString());
-        String res;
+        String res = "";
         
         try {
             res = server.sendAndReceive(req.toString());

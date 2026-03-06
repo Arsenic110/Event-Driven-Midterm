@@ -112,6 +112,7 @@ public class MainView extends Application {
 
         connectButton.setOnAction(e -> controller.connectAndHello());
         sendButton.setOnAction(e -> {
+
             Action a = this.actionBox.getValue();
             LocalDate d = this.datePicker.getValue();
             String t = this.timeBox.getValue();
@@ -122,7 +123,7 @@ public class MainView extends Application {
         });
         stopButton.setOnAction(e -> controller.onStop());
 
-        actionBox.valueProperty().addListener((obs, o, n) -> updateFormForAction(n));
+        //actionBox.valueProperty().addListener((obs, o, n) -> updateFormForAction(n));
 
         GridPane grid = new GridPane();
         grid.setHgap(10);

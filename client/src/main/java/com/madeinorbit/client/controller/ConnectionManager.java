@@ -24,6 +24,8 @@ public class ConnectionManager implements AutoCloseable {
     public String sendAndReceive(String message) throws IOException {
         if (!connected)
             throw new IllegalStateException("Not Connected");
+
+        System.out.println("SENIDING:" + message);
         
         out.writeUTF(message);
         
