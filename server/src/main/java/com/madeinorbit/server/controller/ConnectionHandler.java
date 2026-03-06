@@ -18,16 +18,27 @@ class ConnectionHandler{
 
     public void open(int port) throws IOException{
         serverSocket = new ServerSocket(port);
-        clientSocket = serverSocket.accept();
         isOpen = true;
     }
 
-    public void sendAndReceive() throws IOException {
+    public String receive() throws IOException {
         if(!isOpen){
             throw new IllegalStateException("Fuck off");
         }
 
-        out = new PrintWriter(clientSocket.getOutputStream(), true);
+        String inputRequest;
+        clientSocket = serverSocket.accept();
         in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+        inputRequest = in.readLine();
+
+        return inputRequest;
+    }
+
+    public void send(String response){
+        if(!isOpen){
+            throw new IllegalStateException("Fuck off");
+        }
+
+
     }
 }
