@@ -18,7 +18,7 @@ public class ServerController{
         view = new ConsoleView();
     }
 
-    public void start(){
+    void start(){
         try {
             connectionHandler.open(config.port);
         } catch (IOException e) {
@@ -28,7 +28,7 @@ public class ServerController{
         view.say("Started");
     }
 
-    void runLoop(){
+    public void runLoop(){
         this.start();
         String request, response;
 

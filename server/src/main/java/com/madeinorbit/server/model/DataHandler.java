@@ -7,6 +7,7 @@ public class DataHandler{
 
     public String handleRequest(String requestRaw) throws IncorrectActionException{
         String request[] = requestRaw.split("|"); // or in any other way
+        String output = "OK;";
 
         switch(request[0]) {
             case "ADD":
@@ -19,28 +20,37 @@ public class DataHandler{
                 }
 
                 lectures.add(addee);
-                return "OK;ADDED SUCCESSFULLY";
+                output =  "OK ADDED SUCCESSFULLY;";
+                appendLectures(output);
+                return output;
             case "REMOVE":
                 Lecture removee = new Lecture(request);
 
                 for (int i = 0; i < lectures.size(); i++) {
                     if (lectures.get(i).compareTo(removee) == 0) {
                         lectures.remove(i);
-                        return "OK;SUCCESSFULLY REMOVED";
+                        output = "OK SUCCESSFULLY REMOVED;";
+                        appendLectures(output);
+                        return output;
                     }
                 }
                 throw new IncorrectActionException("INCORRECT;LECTURE NOT FOUND");
             case "DISPLAY":
-                String output = "OK;";
-                for (Lecture l : lectures) {
-                    output += l.toString() + ";";
-                }
+                output = "OK;";
+                appendLectures(output);
                 return output;
             case "OTHER":
-                return "OK; AND?";
+                // placeholder for future stuff
+                return "OK;";
             default:
                 throw new IncorrectActionException("INCORRECT;UNKNOWN REQUEST");
         }
         //this should not be reached
+    }
+
+    private void appendLectures(String response){
+        for(Lecture l: lectures){
+            response += l.toString() + ";";
+        }
     }
 }

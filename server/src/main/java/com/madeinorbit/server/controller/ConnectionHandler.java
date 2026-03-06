@@ -27,6 +27,7 @@ class ConnectionHandler{
         }
 
         String inputRequest;
+        clientSocket = serverSocket.accept();
         in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
         inputRequest = in.readLine();
 
