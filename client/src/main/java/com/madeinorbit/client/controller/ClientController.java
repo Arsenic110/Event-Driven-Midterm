@@ -35,7 +35,7 @@ public class ClientController {
         String reply;
         
         try {
-            reply = server.sendAndReceive("HELLO", 5000);
+            reply = server.sendAndReceive("HELLO");
         } catch (IOException e) {
             view.onError("Cannot communicate with server: " + e);
             server.close();
@@ -70,7 +70,7 @@ public class ClientController {
         String res;
         
         try {
-            res = server.sendAndReceive(req.toString(), 5000);
+            res = server.sendAndReceive(req.toString());
         } catch (IOException e) {
             view.onError("Cannot communicate with server: " + e);
             server.close();

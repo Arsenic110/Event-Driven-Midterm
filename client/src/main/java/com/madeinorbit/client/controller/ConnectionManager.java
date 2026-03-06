@@ -10,20 +10,26 @@ import java.net.*;
  */
 public class ConnectionManager implements AutoCloseable {
     private Socket socket;
-    private BufferedReader in;
-    private PrintWriter out;
+    private DataInputStream in;
+    private DataOutputStream out;
     private boolean connected = false;
 
     public void connect(String host, int port) throws IOException, ConnectException {
         socket = new Socket(host, port);
-        in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        in = new DataInputStream(socket.getInputStream());
+        out = new DataOutputStream(socket.getOutputStream());
         connected = true;
     }
 
     public String sendAndReceive(String message, long timeoutMs) throws IOException {
         if (!connected)
             throw new IllegalStateException("Not Connected");
+        
+        out.writeUTF(message);
+        
+        return in.readUTF();
 
+        /*
         long startTime = System.currentTimeMillis();
         while (System.currentTimeMillis() - startTime < timeoutMs) {
             if (in.ready()) {
@@ -35,13 +41,15 @@ public class ConnectionManager implements AutoCloseable {
                 //handle later idk
             }
         }
-        throw new SocketTimeoutException("Timeout while waiting for a reply...");
+        throw new SocketTimeoutException("Timeout while waiting for a reply..."); */
     }
 
     @Override
     public void close() {
         if (socket != null && !socket.isClosed()) {
             try {
+                in.close();
+                out.close();
                 socket.close();
             } catch (IOException e) {
                 //unknown state
