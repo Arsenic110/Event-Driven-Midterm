@@ -34,7 +34,7 @@ public class MainView extends Application {
     private ClientController controller;
     
     private ComboBox<Action> actionBox;
-    private ComboBox<String> datePicker;
+    private ComboBox<String> dayPicker;
     private ComboBox<String> timeBox;
     private TextField roomField, moduleField;
     private Button sendButton, stopButton, connectButton;
@@ -89,9 +89,10 @@ public class MainView extends Application {
         actionBox = new ComboBox<>(FXCollections.observableArrayList(Action.values()));
         actionBox.getSelectionModel().select(Action.ADD);
 
-        datePicker = new ComboBox<>(FXCollections.observableArrayList(
+        dayPicker = new ComboBox<>(FXCollections.observableArrayList(
                 "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"
         ));
+        dayPicker.getSelectionModel().selectFirst();
 
         timeBox = new ComboBox<>(FXCollections.observableArrayList(
                 "09:00-10:00", "10:00-11:00", "11:00-12:00", "12:00-13:00",
@@ -116,7 +117,7 @@ public class MainView extends Application {
         sendButton.setOnAction(e -> {
 
             Action a = this.actionBox.getValue();
-            String d = this.datePicker.getValue();
+            String d = this.dayPicker.getValue();
             String t = this.timeBox.getValue();
             String r = this.roomField.getText();
             String m = this.moduleField.getText();
@@ -134,7 +135,7 @@ public class MainView extends Application {
 
         int r = 0;
         grid.addRow(r++, new Label("Action:"), actionBox);
-        grid.addRow(r++, new Label("Date:"), datePicker);
+        grid.addRow(r++, new Label("Day:"), dayPicker);
         grid.addRow(r++, new Label("Time:"), timeBox);
         grid.addRow(r++, new Label("Room:"), roomField);
         grid.addRow(r++, new Label("Module:"), moduleField);
@@ -211,7 +212,7 @@ public class MainView extends Application {
         boolean add = a == Action.ADD;
         boolean remove = a == Action.REMOVE;
 
-        datePicker.setDisable(!(add || remove));
+        dayPicker.setDisable(!(add || remove));
         timeBox.setDisable(!(add || remove));
         roomField.setDisable(!add);
         moduleField.setDisable(!add);

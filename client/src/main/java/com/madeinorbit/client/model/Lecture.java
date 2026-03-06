@@ -26,7 +26,7 @@ public class Lecture {
     public Lecture fromString(String info) {
         //"Monday|09:00-10:00|AG01|CS404"
         
-        String[] list = info.split("|");
+        String[] list = info.split("\\|");
         
         return new Lecture(list);
     }
