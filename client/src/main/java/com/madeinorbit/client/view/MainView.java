@@ -198,7 +198,8 @@ public class MainView extends Application {
     public void refreshDisplay(List<Lecture> lectures) {
         List<Row> rows = new ArrayList<>();
         for (Lecture l : lectures) {
-            rows.add(new Row(l.date.toString(), l.time, l.room, l.module));
+            l.toString();
+            rows.add(new Row(l.getDate().toString(), l.getTime(), l.getRoom(), l.getModule()));
         }
         table.setItems(FXCollections.observableArrayList(rows));
     }

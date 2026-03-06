@@ -1,56 +1,41 @@
-package com.madeinorbit.server.model;
+package com.madeinorbit.client.model;
 
-class Lecture implements Comparable<Lecture> {
+import java.time.LocalDate;
+
+public class Lecture {
     LocalDate date;
+    String time;
     String room;
     String moduleName;
 
-    public Lecture(String[] info) {
-        this.day = info[1];
-        this.start = Integer.parseInt(info[2]);
-        this.end = Integer.parseInt(info[3]);
+    private Lecture(String[] info) {
+        //eg:
+        //{"2026", "3", "6", "09:00-10:00", "AG01", "CS404"}
+        
+        this.date = LocalDate.parse(info[0] + "-" + info[1] + "-" + info[2]);
+        this.time = info[3];
         this.room = info[4];
         this.moduleName = info[5];
     }
 
     @Override
     public String toString(){
-        return day + "|" + start + "|" + end + "|" + room + "|" + moduleName;
+        return date.getYear() + "|" + date.getMonth() + "|" + date.getDayOfMonth() + "|" + room + "|" + moduleName;
     }
-
-    @Override // for clash check -1 means no overlap, 0 exact match, 1 overlap
-    public int compareTo(Lecture other){
-        if(other.day.equals(this.day)){
-            if(other.end <= this.start || this.end <= other.start){
-                return -1;
-            }
-            else if(other.start == this.start && other.end == this.end){
-                return 0;
-            }
-            else{
-                return 1;
-            }
-        }
-        return -1;
+    
+    public Lecture fromString(String info) {
+        //"2026|3|6|09:00-10:00|AG01|CS404"
+        
+        String[] list = info.split("|");
+        
+        return new Lecture(list);
     }
-
-    public void setDay(String day) {this.day = day;}
-
-    public void setStart(int start) {this.start = start;}
-
-    public void setEnd(int end) {this.end = end;}
-
-    public void setRoom(String room) {this.room = room;}
-
-    public void setModuleName(String moduleName) {this.moduleName = moduleName;}
-
-    public String getDay() {return this.day;}
-
-    public int getStart() {return start;}
-
-    public int getEnd() {return end;}
-
-    public String getRoom() {return room;}
-
-    public String getModuleName() {return moduleName;}
+    
+    public LocalDate getDate() {return this.date;}
+    
+    public String getTime() {return this.time;}
+    
+    public String getRoom() {return this.room;}
+    
+    public String getModule() {return this.moduleName;}
 }

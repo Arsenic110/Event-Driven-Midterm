@@ -1,6 +1,9 @@
 package com.madeinorbit.client.controller;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.ArrayList;
 import com.madeinorbit.client.model.*;
 import com.madeinorbit.client.view.MainView;
 
@@ -57,7 +60,7 @@ public class ClientController {
 
     //once send button is clicked   
     public void onSend(Action a, LocalDate d, String t, String r, String m) {
-        Request req = Request.fromUI(a, d, t, r m);
+        Request req = Request.fromUI(a, d, t, r, m);
 
         if (!req.isValid()) {
             view.onError("Request is invalid!");
@@ -92,14 +95,15 @@ public class ClientController {
     }
 
     public void onStop() {
-        this.onSend(Action.STOP, new LocalDate(), "", "", "");
+        this.onSend(Action.STOP, LocalDate.now(), "", "", "");
     }
 
     private void refreshData(String res) {
+        List<Lecture> list = new ArrayList<>();
+        
+        view.onError(res);
 
-        List<Lecture> list = new List<>();
-
-        res.split("")
+        //res.split("")
 
         /*
         List<Lecture> list = server.getLecturesSorted();
