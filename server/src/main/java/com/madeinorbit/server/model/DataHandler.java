@@ -10,9 +10,8 @@ public class DataHandler{
             return "READY";
         }
 
-        String request[] = requestRaw.split("|"); // or in any other way
+        String request[] = requestRaw.split("\\|"); // or in any other way
         String output = "OK;";
-
 
         switch(request[0]) {
             case "ADD":

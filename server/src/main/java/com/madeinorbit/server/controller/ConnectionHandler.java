@@ -4,6 +4,7 @@ import java.io.*;
 
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketTimeoutException;
 
 class ConnectionHandler{
     ServerSocket serverSocket;
@@ -18,17 +19,17 @@ class ConnectionHandler{
         isOpen = true;
     }
 
+    public void getClient() throws IOException {
+        clientSocket = serverSocket.accept();
+    }
+
     public String receive() throws IOException {
         if(!isOpen){
             throw new IllegalStateException("Fuck off");
         }
 
-        String inputRequest;
-        clientSocket = serverSocket.accept();
         in = new DataInputStream(clientSocket.getInputStream());
-        inputRequest = in.readUTF();
-
-        return inputRequest;
+        return in.readUTF();
     }
 
     public void send(String response)throws IOException{
@@ -38,6 +39,12 @@ class ConnectionHandler{
 
         out = new DataOutputStream(clientSocket.getOutputStream());
         out.writeUTF(response);
+    }
+
+    public void endComunication() throws IOException{
+        out.close();
+        in.close();
+        clientSocket.close();
     }
 
     public void shutdown(){

@@ -33,6 +33,12 @@ public class ServerController{
         this.start();
         String request, response;
 
+        try {
+            this.connectionHandler.getClient();
+        } catch (IOException e) {
+            //couldnt find a client or smth
+        }
+
         while(this.connectionHandler.isOpen){
             response = "";
 
@@ -55,7 +61,7 @@ public class ServerController{
             }
 
 
-            if(response != ""){
+            if(!response.isEmpty()){
                 try {
                     connectionHandler.send(response);
                 } catch (IOException e) {
