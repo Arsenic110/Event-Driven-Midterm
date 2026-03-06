@@ -27,18 +27,24 @@ class ConnectionHandler{
         }
 
         String inputRequest;
-        clientSocket = serverSocket.accept();
         in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
         inputRequest = in.readLine();
 
         return inputRequest;
     }
 
-    public void send(String response){
+    public void send(String response)throws IOException{
         if(!isOpen){
             throw new IllegalStateException("Fuck off");
         }
 
+        PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
+        out.println(response);
+    }
 
+    public void shutdown(){
+        //kill server
+
+        isOpen = false;
     }
 }

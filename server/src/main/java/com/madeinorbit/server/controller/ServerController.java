@@ -3,10 +3,9 @@ package com.madeinorbit.server.controller;
 import com.madeinorbit.server.model.*;
 import com.madeinorbit.server.view.*;
 
-import javax.swing.plaf.basic.BasicComboBoxUI;
 import java.io.IOException;
 
-class ServerController{
+public class ServerController{
     ConnectionHandler connectionHandler;
     Config config;
     ConsoleView view;
@@ -31,22 +30,34 @@ class ServerController{
 
     void runLoop(){
         this.start();
-        String request;
+        String request, response;
 
         while(this.connectionHandler.isOpen){
+            response = "";
+
             try {
                 request = connectionHandler.receive();
 
                 view.say("Received: " + request);
-                dataHandler.handleRequest(request);
+                response = dataHandler.handleRequest(request);
                 view.say("Handled successfully");
             } catch (IOException e) {
                 view.say("Server not open " + e.getMessage());
             } catch (IncorrectActionException e) {
-                //send
+                try {
+                    connectionHandler.send(e.getMessage());
+                } catch (IOException ex) {
+                    view.say("Couldn't communicate with client " + e.getMessage());
+                }
             }
 
-
+            if(response != ""){
+                try {
+                    connectionHandler.send(response);
+                } catch (IOException e) {
+                    view.say("Couldn't communicate with client " + e.getMessage());
+                }
+            }
         }
     }
 }

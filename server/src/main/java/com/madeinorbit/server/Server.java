@@ -4,13 +4,18 @@
 
 package com.madeinorbit.server;
 
+import com.madeinorbit.server.controller.ServerController;
+
 /**
  *
  * @author Kuba Rodak
  */
 public class Server {
+    static ServerController serverController;
 
     public static void main(String[] args) {
-        System.out.println("Hello World!");
+        serverController = new ServerController();
+
+        serverController.start();
     }
 }

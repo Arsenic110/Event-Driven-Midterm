@@ -12,7 +12,6 @@ import java.io.IOException;
  *
  */
 public class Config {
-    public String host = "127.0.0.1";
     public int port = 8080;
 
     private static final Gson gson = new Gson();
