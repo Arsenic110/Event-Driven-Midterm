@@ -3,6 +3,7 @@ package com.madeinorbit.client.view;
 import com.madeinorbit.client.controller.ClientController;
 import com.madeinorbit.client.model.Action;
 import com.madeinorbit.client.model.Row;
+import com.madeinorbit.client.model.Lecture;
 
 import javafx.application.Application;
 import javafx.geometry.*;
@@ -16,9 +17,10 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.stage.Stage;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Comparator;
+import java.io.IOException;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -70,8 +72,6 @@ public class MainView extends Application {
         stage.setScene(scene);
         
         stage.show();
-        
-        //refreshTable();
     }
     
     private Node makeTitle() {
@@ -106,12 +106,20 @@ public class MainView extends Application {
         connectButton = new Button("Connect");
         sendButton = new Button("Send");
         sendButton.setDisable(true);
-        stopButton = new Button("Stop");
+        stopButton = new Button("Disconnect");
         sendButton.setDisable(true);
         statusLabel = new Label("Ready");
 
         connectButton.setOnAction(e -> controller.connectAndHello());
-        sendButton.setOnAction(e -> controller.onSend());
+        sendButton.setOnAction(e -> {
+            Action a = this.actionBox.getValue();
+            LocalDate d = this.datePicker.getValue();
+            String t = this.timeBox.getValue();
+            String r = this.roomField.getText();
+            String m = this.moduleField.getText();
+
+            controller.onSend(a, d, t, r, m);
+        });
         stopButton.setOnAction(e -> controller.onStop());
 
         actionBox.valueProperty().addListener((obs, o, n) -> updateFormForAction(n));
@@ -187,11 +195,10 @@ public class MainView extends Application {
         return s;
     }
 
-    public void refreshLectures(List<String> lectures) {
+    public void refreshDisplay(List<Lecture> lectures) {
         List<Row> rows = new ArrayList<>();
-        for (String l : lectures) {
-            //rows.add(new Row(l.date.toString(), l.time, l.room, l.module));
-            rows.add(new Row(l, l, l, l));
+        for (Lecture l : lectures) {
+            rows.add(new Row(l.date.toString(), l.time, l.room, l.module));
         }
         table.setItems(FXCollections.observableArrayList(rows));
     }
@@ -211,17 +218,5 @@ public class MainView extends Application {
         c.setCellValueFactory(d -> f.call(d.getValue()));
         return c;
     }
-
-    //java my beloved
-    public ComboBox<Action> getActionBox() { return this.actionBox; }
-    public DatePicker getDatePicker() { return this.datePicker; }
-    public ComboBox<String> getTimeBox() { return this.timeBox; }
-    public TextField getRoomField() { return this.roomField; }
-    public TextField getModuleField() { return this.moduleField; }
-    public Button getSendButton() { return this.sendButton; }
-    public Button getStopButton() { return this.stopButton; }
-    public Label getStatusLabel() { return this.statusLabel; }
-    public TextArea getLogArea() { return this.logArea; }
-    public TableView<Row> getTable() { return this.table; }
 
 }
