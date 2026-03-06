@@ -28,7 +28,7 @@ public class DataHandler{
 
                 lectures.add(addee);
                 output =  "OK ADDED SUCCESSFULLY;";
-                appendLectures(output);
+                output += appendLectures();
                 return output;
             case "REMOVE":
                 Lecture removee = new Lecture(request);
@@ -37,14 +37,14 @@ public class DataHandler{
                     if (lectures.get(i).compareTo(removee) == 0) {
                         lectures.remove(i);
                         output = "OK SUCCESSFULLY REMOVED;";
-                        appendLectures(output);
+                        output += appendLectures();
                         return output;
                     }
                 }
                 throw new IncorrectActionException("INCORRECT;LECTURE NOT FOUND");
             case "DISPLAY":
                 output = "OK;";
-                appendLectures(output);
+                output += appendLectures();
                 return output;
             case "OTHER":
                 // placeholder for future stuff
@@ -57,9 +57,11 @@ public class DataHandler{
         //this should not be reached
     }
 
-    private void appendLectures(String response){
+    private String appendLectures(){
+        String response = "";
         for(Lecture l: lectures){
             response += l.toString() + ";";
         }
+        return response;
     }
 }
