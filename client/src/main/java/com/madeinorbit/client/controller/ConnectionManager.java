@@ -21,27 +21,13 @@ public class ConnectionManager implements AutoCloseable {
         connected = true;
     }
 
-    public String sendAndReceive(String message, long timeoutMs) throws IOException {
+    public String sendAndReceive(String message) throws IOException {
         if (!connected)
             throw new IllegalStateException("Not Connected");
         
         out.writeUTF(message);
         
         return in.readUTF();
-
-        /*
-        long startTime = System.currentTimeMillis();
-        while (System.currentTimeMillis() - startTime < timeoutMs) {
-            if (in.ready()) {
-                return in.readLine();
-            }
-            try {
-                Thread.sleep(50);
-            } catch (InterruptedException ignored) {
-                //handle later idk
-            }
-        }
-        throw new SocketTimeoutException("Timeout while waiting for a reply..."); */
     }
 
     @Override
