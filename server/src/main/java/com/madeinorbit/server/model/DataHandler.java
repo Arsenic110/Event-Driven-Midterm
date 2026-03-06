@@ -42,6 +42,8 @@ public class DataHandler{
             case "OTHER":
                 // placeholder for future stuff
                 return "OK;";
+            case "STOP":
+                return "TERMINATE";
             default:
                 throw new IncorrectActionException("INCORRECT;UNKNOWN REQUEST");
         }

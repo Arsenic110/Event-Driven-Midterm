@@ -54,6 +54,7 @@ public class ServerController{
                 }
             }
 
+
             if(response != ""){
                 try {
                     connectionHandler.send(response);
