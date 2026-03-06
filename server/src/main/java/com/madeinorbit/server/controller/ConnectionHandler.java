@@ -11,7 +11,7 @@ class ConnectionHandler{
     Socket clientSocket;
     DataOutputStream out;
     DataInputStream in;
-    boolean isOpen = false;
+    boolean isOpen = false, isConnected = false;
 
 
     public void open(int port) throws IOException{
@@ -21,6 +21,7 @@ class ConnectionHandler{
 
     public void getClient() throws IOException {
         clientSocket = serverSocket.accept();
+        isConnected = true;
     }
 
     public String receive() throws IOException {
@@ -41,10 +42,8 @@ class ConnectionHandler{
         out.writeUTF(response);
     }
 
-    public void endComunication() throws IOException{
-        out.close();
-        in.close();
-        clientSocket.close();
+    public void endConnection(){
+        isConnected = false;
     }
 
     public void shutdown(){

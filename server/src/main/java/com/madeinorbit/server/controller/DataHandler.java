@@ -1,11 +1,14 @@
-package com.madeinorbit.server.model;
+package com.madeinorbit.server.controller;
+
+import com.madeinorbit.server.model.IncorrectActionException;
+import com.madeinorbit.server.model.Lecture;
 
 import java.util.ArrayList;
 
 public class DataHandler{
     ArrayList<Lecture> lectures = new ArrayList<>();
 
-    public String handleRequest(String requestRaw) throws IncorrectActionException{
+    public String handleRequest(String requestRaw) throws IncorrectActionException {
         if(requestRaw.equals("HELLO")){
             return "READY";
         }

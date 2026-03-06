@@ -1,6 +1,6 @@
 package com.madeinorbit.server.model;
 
-class Lecture implements Comparable<Lecture> {
+public class Lecture implements Comparable<Lecture> {
     String day;
     String time;
     String room;
