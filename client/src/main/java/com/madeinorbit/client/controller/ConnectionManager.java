@@ -28,8 +28,14 @@ public class ConnectionManager implements AutoCloseable {
         System.out.println("SENIDING:" + message);
         
         out.writeUTF(message);
-        
-        return in.readUTF();
+
+        long startTime = System.currentTimeMillis();
+        while (System.currentTimeMillis() - startTime < 1000) {
+            if (in.available() > 0) {
+                return in.readUTF();
+            }
+        }
+        throw new SocketTimeoutException("Timeout while waiting for a reply...");
     }
 
     @Override
